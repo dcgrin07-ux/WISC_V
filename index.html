@@ -722,17 +722,12 @@ function compartirWhatsApp(){
   const urlText = document.getElementById('generatedUrlText').textContent;
   const nombre = document.getElementById('name').value.trim() || 'Evaluado/a';
   
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(urlText).then(() => {
-      alert('✅ ¡Enlace copiado al portapapeles!\n\nAhora se abrirá WhatsApp: pegá el enlace junto al mensaje institucional.');
-      const msgAmigable = `📖 *Informe Psicométrico WISC-V (NexusDigital)*\n👤 *Paciente:* ${nombre}\n\n🔗 *Enlace al informe interactivo de 5 páginas:* (Pegalo aquí con mantener presionado)`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msgAmigable)}`, '_blank');
-    });
-  } else {
-    const mensaje = `📖 *Informe WISC-V · NexusDigital*\n👤 *Paciente:* ${nombre}\n\n🔗 ${urlText}`;
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mensaje)}`, '_blank');
-  }
+  // Mensaje completo y formal que incluye el enlace real ordenado
+  const mensaje = `📖 *Informe Psicométrico WISC-V (NexusDigital)*\n👤 *Paciente:* ${nombre}\n\n🔗 *Accedé al informe interactivo de 5 páginas haciendo clic acá:*\n${urlText}`;
+  
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mensaje)}`, '_blank');
 }
+
 
 
 function copiarEnlaceSilencioso(){
