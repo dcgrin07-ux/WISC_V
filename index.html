@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>WISC-V · NexusDigital · v5.0.4</title>
+<title>WISC-V · NexusDigital · v5.0.5</title>
 <link rel="manifest" href="manifest.json">
 <style>
 :root {
@@ -133,7 +133,7 @@ th{background:#f1f5f9;color:var(--primary);font-weight:700}
   <div class="brand-box">
     <div>
       <div class="brand-title">WISC-V · Escala de Inteligencia de Wechsler para Niños</div>
-      <div class="brand-sub">NexusDigital · v5.0.4</div>
+      <div class="brand-sub">NexusDigital · v5.0.5</div>
     </div>
   </div>
   <div style="display:flex; align-items:center; gap:8px;" id="headerActionBox">
@@ -192,7 +192,7 @@ th{background:#f1f5f9;color:var(--primary);font-weight:700}
 
   <div class="book-container">
     <div class="book-nav-bar">
-      <span>📖 Informe Digital WISC-V (v5.0.4 - 5 Páginas) · NexusDigital</span>
+      <span>📖 Informe Digital WISC-V (v5.0.5 - 5 Páginas) · NexusDigital</span>
       <div style="display:flex; gap:8px; align-items:center;">
         <button class="btn print-btn" style="padding:4px 8px;font-size:12px;margin:0" onclick="window.print()">🖨️ Imprimir</button>
         <span style="font-size:12px; font-weight:400">Deslizá horizontalmente</span>
@@ -456,7 +456,7 @@ function generarPaginaSintesisFinal(){
   return `
     <div>
       <div class="protocol-title">
-        <div class="brand">WISC-V · Protocolo Clínico (v5.0.4)</div>
+        <div class="brand">WISC-V · Protocolo Clínico (v5.0.5)</div>
         <div style="font-size:11px;color:#64748b">NexusDigital</div>
       </div>
       <div class="protocol-section-title" style="margin-top:10px">Síntesis Conclusiva y Cierre Psicopedagógico</div>
@@ -482,9 +482,9 @@ function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 function limpiar(){location.reload()}
 
 function guardarJSON(){
-  const obj={version:'5.0.4',marca:'NexusDigital',nombre:document.getElementById('name').value,dni:document.getElementById('dni').value,indices:currentIndexResults};
+  const obj={version:'5.0.5',marca:'NexusDigital',nombre:document.getElementById('name').value,dni:document.getElementById('dni').value,indices:currentIndexResults};
   const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
-  const aEl=document.createElement('a');aEl.href=URL.createObjectURL(blob);aEl.download=(document.getElementById('name').value.trim()||'wisc-v-v5.0.4')+'.json';aEl.click();
+  const aEl=document.createElement('a');aEl.href=URL.createObjectURL(blob);aEl.download=(document.getElementById('name').value.trim()||'wisc-v-v5.0.5')+'.json';aEl.click();
 }
 
 window.onload = function(){
@@ -494,7 +494,7 @@ window.onload = function(){
     const now=new Date();
     setPart('e',now.getDate(),now.getMonth()+1,now.getFullYear());
   }
-  // RESTAURADO: Lee el parámetro ?data= y abre el informe en cualquier dispositivo externo
+  // Visor externo automático por URL
   verificarModoVisorExterno();
 };
 
@@ -597,7 +597,7 @@ function abrirLibritoDigital(){
   
   const sc=getScalarMap();
   const payload = {
-    v: '5.0.4',
+    v: '5.0.5',
     name: document.getElementById('name').value || '',
     dni: document.getElementById('dni').value || '',
     examiner: document.getElementById('examiner').value || '',
@@ -643,7 +643,7 @@ function renderizarContenidoLibrito(nombre, dni, exam, sc, esVisorExterno){
       <div style="display:flex;flex-direction:column;justify-content:center;height:100%">
         <div class="protocol-cover">
           <h1>WISC-V</h1>
-          <h2>Escala de Inteligencia de Wechsler para Niños (v5.0.4)</h2>
+          <h2>Escala de Inteligencia de Wechsler para Niños (v5.0.5)</h2>
           <div class="cover-meta-box">
             <div><b>Evaluado/a:</b> ${escapeHtml(nombre)}</div>
             ${dni ? `<div><b>DNI / Legajo:</b> ${escapeHtml(dni)}</div>` : ''}
@@ -653,7 +653,7 @@ function renderizarContenidoLibrito(nombre, dni, exam, sc, esVisorExterno){
           </div>
         </div>
       </div>
-      <div class="book-page-footer"><span>NexusDigital · v5.0.4</span><span>1 / 5</span></div>
+      <div class="book-page-footer"><span>NexusDigital · v5.0.5</span><span>1 / 5</span></div>
     </div>
 
     <!-- PÁGINA 2: Puntajes Brutos y Escalares -->
@@ -661,7 +661,7 @@ function renderizarContenidoLibrito(nombre, dni, exam, sc, esVisorExterno){
       <div>
         <div class="protocol-title">
           <div class="brand">WISC-V · Puntajes Brutos y Escalares</div>
-          <div style="font-size:11px;color:#64748b">NexusDigital (v5.0.4)</div>
+          <div style="font-size:11px;color:#64748b">NexusDigital (v5.0.5)</div>
         </div>
         <div class="protocol-section-title" style="margin-top:6px">Desempeño en Subpruebas (15 Subpruebas)</div>
         ${protocoloSubtests(sc)}
@@ -674,7 +674,7 @@ function renderizarContenidoLibrito(nombre, dni, exam, sc, esVisorExterno){
       <div>
         <div class="protocol-title">
           <div class="brand">WISC-V · Puntuaciones Compuestas</div>
-          <div style="font-size:11px;color:#64748b">NexusDigital (v5.0.4)</div>
+          <div style="font-size:11px;color:#64748b">NexusDigital (v5.0.5)</div>
         </div>
         <div class="protocol-section-title" style="margin-top:6px">Índices Primarios y CIT</div>
         <table class="compound-p"><thead><tr><th>Índice</th><th>Suma</th><th>Comp</th><th>%</th><th>IC 90%</th></tr></thead><tbody>${protocoloIndexRows()}</tbody></table>
@@ -690,7 +690,7 @@ function renderizarContenidoLibrito(nombre, dni, exam, sc, esVisorExterno){
       <div>
         <div class="protocol-title">
           <div class="brand">WISC-V · Análisis Cualitativo</div>
-          <div style="font-size:11px;color:#64748b">NexusDigital (v5.0.4)</div>
+          <div style="font-size:11px;color:#64748b">NexusDigital (v5.0.5)</div>
         </div>
         <div style="margin-top:10px">
           ${generarTextoInformeCualitativo()}
@@ -702,7 +702,7 @@ function renderizarContenidoLibrito(nombre, dni, exam, sc, esVisorExterno){
     <!-- PÁGINA 5: Síntesis Conclusiva -->
     <div class="book-page book-page-item">
       ${generarPaginaSintesisFinal()}
-      <div class="book-page-footer"><span>Fin del informe formal (v5.0.4) · NexusDigital</span><span>5 / 5</span></div>
+      <div class="book-page-footer"><span>Fin del informe formal (v5.0.5) · NexusDigital</span><span>5 / 5</span></div>
     </div>
   `;
 
@@ -753,14 +753,12 @@ function verificarModoVisorExterno(){
     if(payload.bm) document.getElementById('bm').value = payload.bm;
     if(payload.by) document.getElementById('by').value = payload.by;
     if(payload.ed) document.getElementById('ed').value = payload.ed;
-    if(payload.em) document.getElementById('em').value.trim() || payload.em;
     if(payload.em) document.getElementById('em').value = payload.em;
     if(payload.ey) document.getElementById('ey').value = payload.ey;
     if(payload.obs) document.getElementById('observaciones').value = payload.obs;
     if(payload.idx) currentIndexResults = payload.idx;
     
     let sc = payload.scl || {};
-    // Dibuja el informe automáticamente al abrir el enlace externo
     renderizarContenidoLibrito(payload.name || '—', payload.dni || '', payload.examiner || '—', sc, true);
   } catch(e) {
     console.error("Error al decodificar los datos externos del informe", e);
