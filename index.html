@@ -127,6 +127,16 @@ th{background:#f1f5f9;color:var(--primary);font-weight:700}
 }
 </style>
 </head>
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(err => {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+  }
+</script>
+
 <body>
 <header>
   <div class="brand-box">
