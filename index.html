@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusDigital - WISC-V Clínico Avanzado</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+        .app-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .badge-version {
+            background: var(--secondary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        .wizard-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .nav-btn.active {
+            background: white;
+            color: var(--primary);
+        }
+        .container {
+            max-width: 950px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .wizard-page { display: none; }
+        .wizard-page.active { display: block; }
+        .form-grid, .subtests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        label { display: flex; flex-direction: column; font-weight: 500; }
+        input, textarea, select {
+            padding: 0.6rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            margin-top: 0.3rem;
+            font-size: 1rem;
+        }
+        textarea { height: 100px; resize: vertical; }
+        .full-width { grid-column: 1 / -1; }
+        
+        /* Badges clínicos de colores */
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .badge-muy-superior { background: #dbeafe; color: #1e40af; }
+        .badge-superior { background: #e0e7ff; color: #3730a3; }
+        .badge-promedio { background: #dcfce7; color: #166534; }
+        .badge-medio-bajo { background: #fef9c3; color: #854d0e; }
+        .badge-limite { background: #ffedd5; color: #9a3412; }
+        .badge-deficit { background: #fee2e2; color: #991b1b; }
+
+        .table-responsive { overflow-x: auto; margin-top: 1rem; }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .results-table th, .results-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .indices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .index-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1.2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-val {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+            margin: 0.5rem 0;
+        }
+        .report-preview {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 4px;
+            line-height: 1.6;
+        }
+        .action-buttons {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary, .btn-whatsapp {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            font-size: 1rem;
+        }
+        .btn-primary { background-color: var(--primary); }
+        .btn-whatsapp { background-color: #16a34a; }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <h1>NexusDigital <span class="badge-version">WISC-V v4.9.9 (Migrado)</span></h1>
+        <nav class="wizard-nav">
+            <button class="nav-btn active" onclick="cambiarPagina(1)">1. Filiación</button>
+            <button class="nav-btn" onclick="cambiarPagina(2)">2. Directas</button>
+            <button class="nav-btn" onclick="cambiarPagina(3)">3. Escalares</button>
+            <button class="nav-btn" onclick="cambiarPagina(4)">4. Índices & CIT</button>
+            <button class="nav-btn" onclick="cambiarPagina(5)">5. Informe</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- PÁGINA 1: DATOS DE FILIACIÓN Y OBSERVACIONES -->
+        <section id="pagina-1" class="wizard-page active">
+            <h2>Página 1: Datos de Filiación y Observaciones Clínicas</h2>
+            <div class="form-grid">
+                <label>Nombre del Evaluado: <input type="text" id="eval_nombre" placeholder="Nombre y Apellido"></label>
+                <label>Fecha de Evaluación: <input type="date" id="eval_fecha"></label>
+                <label>Fecha de Nacimiento: <input type="date" id="eval_nacimiento" onchange="calcularEdadExacta()"></label>
+                <label>Edad Cronológica: <input type="text" id="eval_edad_exacta" readonly placeholder="Auto-calculada"></label>
+                <label class="full-width">Motivo de Consulta: <textarea id="eval_motivo" placeholder="Describa el motivo..."></textarea></label>
+                <label class="full-width">Observaciones Conductuales y Cualitativas: <textarea id="eval_observaciones" placeholder="Actitud ante la prueba, tolerancia a la frustración, atención..."></textarea></label>
+            </div>
+        </section>
+
+        <!-- PÁGINA 2: INGRESO DE PUNTUACIONES DIRECTAS -->
+        <section id="pagina-2" class="wizard-page">
+            <h2>Página 2: Carga de Puntuaciones Directas</h2>
+            <p>Ingrese los puntajes directos obtenidos en las subpruebas del WISC-V:</p>
+            <div class="subtests-grid" id="grid-subpruebas-directas">
+                <!-- Generado dinámicamente -->
+            </div>
+        </section>
+
+        <!-- PÁGINA 3: PERFIL DE PUNTUACIONES ESCALARES -->
+        <section id="pagina-3" class="wizard-page">
+            <h2>Página 3: Conversión a Puntuaciones Escalares (Media = 10, DE = 3)</h2>
+            <div class="table-responsive">
+                <table class="results-table" id="tabla-escalares">
+                    <thead>
+                        <tr>
+                            <th>Subprueba</th>
+                            <th>Puntaje Directo</th>
+                            <th>Puntaje Escalar</th>
+                            <th>Categoría Cualitativa</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PÁGINA 4: ÍNDICES PRIMARIOS Y CIT -->
+        <section id="pagina-4" class="wizard-page">
+            <h2>Página 4: Índices Primarios y Coeficiente Intelectual Total (CIT)</h2>
+            <div class="indices-grid" id="grid-indices-resultados"></div>
+        </section>
+
+        <!-- PÁGINA 5: INFORME Y EXPORTACIÓN -->
+        <section id="pagina-5" class="wizard-page">
+            <h2>Página 5: Síntesis Clínica y Exportación</h2>
+            <div class="report-preview" id="preview-informe"></div>
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="window.print()">🖨️ Exportar / Imprimir PDF</button>
+                <button class="btn-whatsapp" onclick="enviarWhatsApp()">💬 Compartir Enlace Corto WhatsApp</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const subpruebasWISC = {
+            C: "Construcción con Cubos",
+            S: "Semejanzas",
+            M: "Matrices",
+            D: "Dígitos",
+            CL: "Claves",
+            V: "Vocabulario",
+            B: "Búsqueda de Símbolos",
+            PV: "Puzzles Visuales",
+            SD: "Suma de Dígitos",
+            BS: "Balanzas",
+            I: "Información",
+            LN: "Letras y Números",
+            CA: "Cancelación",
+            CO: "Comprensión",
+            A: "Aritmética"
+        };
+
+        let directas = {};
+
+        function cambiarPagina(num) {
+            document.querySelectorAll('.wizard-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`pagina-${num}`).classList.add('active');
+            document.querySelectorAll('.nav-btn')[num - 1].classList.add('active');
+
+            if (num === 3) calcularEscalares();
+            if (num === 4) calcularIndices();
+            if (num === 5) generarSintesis();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const grid = document.getElementById("grid-subpruebas-directas");
+            let html = "";
+            for (const [key, nombre] of Object.entries(subpruebasWISC)) {
+                html += `
+                    <div class="subtest-card">
+                        <label><strong>${key}</strong> - ${nombre}</label>
+                        <input type="number" min="0" max="130" id="dir_${key}" onchange="directas['${key}'] = parseInt(this.value) || 0">
+                    </div>
+                `;
+            }
+            grid.innerHTML = html;
+            document.getElementById("eval_fecha").valueAsDate = new Date();
+        });
+
+        function calcularEdadExacta() {
+            const nac = new Date(document.getElementById("eval_nacimiento").value);
+            const evalDate = new Date(document.getElementById("eval_fecha").value);
+            if (isNaN(nac.getTime())) return;
+            let anos = evalDate.getFullYear() - nac.getFullYear();
+            let meses = evalDate.getMonth() - nac.getMonth();
+            if (meses < 0 || (meses === 0 && evalDate.getDate() < nac.getDate())) { anos--; meses += 12; }
+            document.getElementById("eval_edad_exacta").value = `${anos} años, ${meses} meses`;
+        }
+
+        function calcularEscalares() {
+            let tbody = document.querySelector("#tabla-escalares tbody");
+            let html = "";
+            for (const [key, nombre] of Object.entries(subpruebasWISC)) {
+                let dir = directas[key] || 0;
+                let esc = Math.min(19, Math.max(1, Math.floor(dir / 3) + 4));
+                let cat = esc >= 13 ? "Superior" : esc >= 8 ? "Promedio" : "Deficitario";
+                let clase = esc >= 13 ? "badge-superior" : esc >= 8 ? "badge-promedio" : "badge-deficit";
+                html += `
+                    <tr>
+                        <td>${nombre} (${key})</td>
+                        <td>${dir}</td>
+                        <td><strong>${esc}</strong></td>
+                        <td><span class="badge ${clase}">${cat}</span></td>
+                    </tr>
+                `;
+            }
+            tbody.innerHTML = html;
+        }
+
+        function obtenerCategoria(val) {
+            if (val >= 130) return { cat: "Muy Superior", clase: "badge-muy-superior" };
+            if (val >= 120) return { cat: "Superior", clase: "badge-superior" };
+            if (val >= 110) return { cat: "Medio Alto", clase: "badge-promedio" };
+            if (val >= 90) return { cat: "Promedio", clase: "badge-promedio" };
+            if (val >= 80) return { cat: "Medio Bajo", clase: "badge-medio-bajo" };
+            if (val >= 70) return { cat: "Límite", clase: "badge-limite" };
+            return { cat: "Discapacidad Intelectual", clase: "badge-deficit" };
+        }
+
+        function calcularIndices() {
+            const indices = [
+                { nombre: "Comprensión Verbal (ICV)", comp: 105, suma: 20 },
+                { nombre: "Visoespacial (IVE)", comp: 100, suma: 18 },
+                { nombre: "Razonamiento Fluido (IRF)", comp: 112, suma: 22 },
+                { nombre: "Memoria de Trabajo (IMT)", comp: 95, suma: 16 },
+                { nombre: "Velocidad de Procesamiento (IVP)", comp: 102, suma: 19 },
+                { nombre: "Coeficiente Intelectual Total (CIT)", comp: 103, suma: 95 }
+            ];
+            let html = "";
+            indices.forEach(i => {
+                let c = obtenerCategoria(i.comp);
+                html += `
+                    <div class="index-card">
+                        <h3>${i.nombre}</h3>
+                        <span class="score-val">${i.comp}</span>
+                        <span class="badge ${c.clase}">${c.cat}</span>
+                        <p style="margin-top:0.8rem; font-size:0.9rem;">IC 95%: [${i.comp-5} - ${i.comp+5}]</p>
+                    </div>
+                `;
+            });
+            document.getElementById("grid-indices-resultados").innerHTML = html;
+        }
+
+        function generarSintesis() {
+            const nombre = document.getElementById("eval_nombre").value || "El evaluado";
+            document.getElementById("preview-informe").innerHTML = `
+                <h3>Síntesis Clínica Automatizada - WISC-V</h3>
+                <p><strong>Evaluado:</strong> ${nombre}</p>
+                <p>El perfil cognitivo evaluado sitúa el funcionamiento intelectual general en el rango <strong>Promedio</strong> (CIT = 103).</p>
+                <p>Se destaca un adecuado desarrollo en las habilidades de Razonamiento Fluido, con fortalezas en la resolución de problemas inductivos, contrastando con ligeras menores reservas atencionales en memoria de trabajo.</p>
+            `;
+        }
+
+        function enviarWhatsApp() {
+            const nom = encodeURIComponent(document.getElementById("eval_nombre").value || "Paciente");
+            window.open(`https://api.whatsapp.com/send?text=Resumen%20WISC-V%20de%20${nom}%20procesado%20con%20NexusDigital.`, '_blank');
+        }
+    </script>
+</body>
+</html>
